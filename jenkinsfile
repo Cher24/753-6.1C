@@ -7,65 +7,63 @@ pipeline {
                 echo "Tool : Maven"
             }
         }
-        stage('Unit and Integration Tests'){
-            step {
+        stage('Unit and Integration Tests') {
+            steps {  // Corrected from 'step' to 'steps'
                 echo "Unit and Integration Test passed"
                 echo "Tool : Junit"
             }
             post {
-                success {
+                success {  // Corrected from 'succuss' to 'success'
                     mail to: "chermod2011@gmail.com",
                     subject: "Build Status Email",
                     body: "Build was successful!"
-                    }
+                }
                 failure {
                     mail to: "chermod2011@gmail.com",
                     subject: "Build Status Email",
-                    body: "Build was failure!"
-        
-                    }
-                 }
+                    body: "Build failed!"
+                }
+            }
         }
-        stage('Code Analysis'){
+        stage('Code Analysis') {
             steps {
                 echo "Code Analysis : Completed"
                 echo "Tool : Jmeter"
             }
         }
-        stage('Security Scan'){
+        stage('Security Scan') {
             steps {
                 echo "Security Scan completed"
                 echo "Tool : Jmester"
             }
             post {
-                succuss {
+                success {  // Corrected from 'succuss' to 'success'
                     mail to: "chermod2011@gmail.com",
                     subject: "Security scan status Email",
-                    body: "Security scan was success!"
+                    body: "Security scan was successful!"
                 }
                 failure {
                     mail to: "chermod2011@gmail.com",
                     subject: "Security scan status Email",
-                    body: "Security scan was failure!"
+                    body: "Security scan failed!"
                 }
             }
         }
-        stage('Deploy to Staging'){
+        stage('Deploy to Staging') {
             steps {
-                echo "Deplyed to Staging"
+                echo "Deployed to Staging"
             }
         }
-        stage('Integration Tests on Staging'){
+        stage('Integration Tests on Staging') {
             steps {
                 echo "Integration Tests on Staging passed"
                 echo "Tool : Jmeter"
             }
         }
-        stage('Deploy to Production'){
+        stage('Deploy to Production') {
             steps {
                 echo "Deployed to Production"
             }
         }
     }
 }
-        
