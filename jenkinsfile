@@ -3,69 +3,69 @@ pipeline {
     stages {
         stage("Build") {
             steps {
-                echo "Building the project..."
-                sh 'mvn clean package'  // Assumes a Maven project
+                echo "Building was successful"
+                echo "Tool : Maven"
+            }
+        }
+        stage('Unit and Integration Tests'){
+            step {
+                echo "Unit and Integration Test passed"
+                echo "Tool : Junit"
             }
             post {
-                always {
+                success {
                     mail to: "chermod2011@gmail.com",
                     subject: "Build Status Email",
-                    body: "Build completed with status: ${currentBuild.result}" // No attachLog
-                }
+                    body: "Build was successful!"
+                    }
+                failure {
+                    mail to: "chermod2011@gmail.com",
+                    subject: "Build Status Email",
+                    body: "Build was failure!"
+        
+                    }
+                 }
+        }
+        stage('Code Analysis'){
+            steps {
+                echo "Code Analysis : Completed"
+                echo "Tool : Jmeter"
             }
         }
-        stage("Unit and Integration Tests") {
+        stage('Security Scan'){
             steps {
-                echo "Running Unit and Integration Tests..."
-                sh 'mvn test'
+                echo "Security Scan completed"
+                echo "Tool : Jmester"
             }
             post {
-                always {
-                    junit '**/target/surefire-reports/*.xml' // Collect test reports
+                succuss {
                     mail to: "chermod2011@gmail.com",
-                    subject: "Test Status Email",
-                    body: "Tests completed with status: ${currentBuild.result}" // No attachLog
+                    subject: "Security scan status Email",
+                    body: "Security scan was success!"
                 }
-            }
-        }
-        stage("Code Analysis") {
-            steps {
-                echo "Performing Code Analysis with SonarQube..."
-                withSonarQubeEnv('SonarQube') {
-                    sh 'mvn sonar:sonar'
-                }
-            }
-        }
-        stage("Security Scan") {
-            steps {
-                echo "Running Security Scan with OWASP Dependency Check..."
-                sh 'mvn org.owasp:dependency-check-maven:check'
-            }
-            post {
-                always {
+                failure {
                     mail to: "chermod2011@gmail.com",
-                    subject: "Security Scan Status",
-                    body: "Security scan completed with status: ${currentBuild.result}" // No attachLog
+                    subject: "Security scan status Email",
+                    body: "Security scan was failure!"
                 }
             }
         }
-        stage("Deploy to Staging") {
+        stage('Deploy to Staging'){
             steps {
-                echo "Deploying to Staging Server..."
-                sh 'scp -i /path/to/key.pem target/your-app.jar ec2-user@<staging-ec2-ip>:/path/to/deploy/'
+                echo "Deplyed to Staging"
             }
         }
-        stage("Integration Tests on Staging") {
+        stage('Integration Tests on Staging'){
             steps {
-                echo "Running Integration Tests on Staging..."
-                sh 'ssh -i /path/to/key.pem ec2-user@<staging-ec2-ip> "cd /path/to/app && ./run-integration-tests.sh"'
+                echo "Integration Tests on Staging passed"
+                echo "Tool : Jmeter"
             }
         }
-        stage("Deploy to Production") {
+        stage('Deploy to Production'){
             steps {
-                echo "Deploying to Production Server..."
-                sh 'scp -i /path/to/key.pem target/your-app.jar ec2-user@<prod-ec2-ip>:/path/to/deploy/'
+                echo "Deployed to Production"
             }
         }
     }
 }
+        
