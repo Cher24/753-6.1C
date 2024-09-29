@@ -10,8 +10,7 @@ pipeline {
                 always {
                     mail to: "chermod2011@gmail.com",
                     subject: "Build Status Email",
-                    body: "Build completed with status: ${currentBuild.result}",
-                    attachLog: true
+                    body: "Build completed with status: ${currentBuild.result}" // No attachLog
                 }
             }
         }
@@ -22,11 +21,10 @@ pipeline {
             }
             post {
                 always {
-                    junit '**/target/surefire-reports/*.xml'
+                    junit '**/target/surefire-reports/*.xml' // Collect test reports
                     mail to: "chermod2011@gmail.com",
                     subject: "Test Status Email",
-                    body: "Tests completed with status: ${currentBuild.result}",
-                    attachLog: true
+                    body: "Tests completed with status: ${currentBuild.result}" // No attachLog
                 }
             }
         }
@@ -47,8 +45,7 @@ pipeline {
                 always {
                     mail to: "chermod2011@gmail.com",
                     subject: "Security Scan Status",
-                    body: "Security scan completed with status: ${currentBuild.result}",
-                    attachLog: true
+                    body: "Security scan completed with status: ${currentBuild.result}" // No attachLog
                 }
             }
         }
