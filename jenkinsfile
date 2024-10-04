@@ -42,7 +42,6 @@ pipeline {
                         to: 'chermod2011@gmail.com', 
                         subject: 'Test Status Email',
                         body: 'Test successful', 
-                        attachLog: true
                     )
                 }
             }
