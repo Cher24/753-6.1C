@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-
     stages {
         stage("Build") {
             steps {
@@ -10,20 +9,26 @@ pipeline {
             }
         }
         stage('Unit and Integration Tests') {
-            steps {  // Corrected from 'step' to 'steps'
+            steps {
                 echo "Unit and Integration Test passed"
                 echo "Tool : Junit"
             }
             post {
-                success {  // Corrected from 'succuss' to 'success'
-                    mail to: "chermod2011@gmail.com",
-                    subject: "Build Status Email",
-                    body: "Build was successful!"
+                success {
+                    emailext(
+                        to: "chermod2011@gmail.com",
+                        subject: "Build Status Email: SUCCESS",
+                        body: "Build was successful!",
+                        attachLog: true
+                    )
                 }
                 failure {
-                    mail to: "chermod2011@gmail.com",
-                    subject: "Build Status Email",
-                    body: "Build failed!"
+                    emailext(
+                        to: "chermod2011@gmail.com",
+                        subject: "Build Status Email: FAILURE",
+                        body: "Build failed!",
+                        attachLog: true
+                    )
                 }
             }
         }
@@ -39,15 +44,21 @@ pipeline {
                 echo "Tool : Jmester"
             }
             post {
-                success {  // Corrected from 'succuss' to 'success'
-                    mail to: "chermod2011@gmail.com",
-                    subject: "Security scan status Email",
-                    body: "Security scan was successful!"
+                success {
+                    emailext(
+                        to: "chermod2011@gmail.com",
+                        subject: "Security Scan Status: SUCCESS",
+                        body: "Security scan was successful!",
+                        attachLog: true
+                    )
                 }
                 failure {
-                    mail to: "chermod2011@gmail.com",
-                    subject: "Security scan status Email",
-                    body: "Security scan failed!"
+                    emailext(
+                        to: "chermod2011@gmail.com",
+                        subject: "Security Scan Status: FAILURE",
+                        body: "Security scan failed!",
+                        attachLog: true
+                    )
                 }
             }
         }
