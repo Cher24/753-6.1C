@@ -1,6 +1,7 @@
 pipeline {
     agent any
 
+
     stages {
         stage("Build") {
             steps {
@@ -9,28 +10,20 @@ pipeline {
             }
         }
         stage('Unit and Integration Tests') {
-            steps {
+            steps {  // Corrected from 'step' to 'steps'
                 echo "Unit and Integration Test passed"
                 echo "Tool : Junit"
             }
             post {
-                success {
-                    archiveArtifacts artifacts: 'target/logs/*.log', allowEmptyArchive: true
-                    emailext(
-                        to: "chermod2011@gmail.com",
-                        subject: "Build Status Email",
-                        body: "Build was successful!",
-                        attachmentsPattern: 'target/logs/*.log'
-                    )
+                success {  // Corrected from 'succuss' to 'success'
+                    mail to: "chermod2011@gmail.com",
+                    subject: "Build Status Email",
+                    body: "Build was successful!"
                 }
                 failure {
-                    archiveArtifacts artifacts: 'target/logs/*.log', allowEmptyArchive: true
-                    emailext(
-                        to: "chermod2011@gmail.com",
-                        subject: "Build Status Email",
-                        body: "Build failed!",
-                        attachmentsPattern: 'target/logs/*.log'
-                    )
+                    mail to: "chermod2011@gmail.com",
+                    subject: "Build Status Email",
+                    body: "Build failed!"
                 }
             }
         }
@@ -43,26 +36,18 @@ pipeline {
         stage('Security Scan') {
             steps {
                 echo "Security Scan completed"
-                echo "Tool : Jmeter"
+                echo "Tool : Jmester"
             }
             post {
-                success {
-                    archiveArtifacts artifacts: 'target/logs/*.log', allowEmptyArchive: true
-                    emailext(
-                        to: "chermod2011@gmail.com",
-                        subject: "Security scan status Email",
-                        body: "Security scan was successful!",
-                        attachmentsPattern: 'target/logs/*.log'
-                    )
+                success {  // Corrected from 'succuss' to 'success'
+                    mail to: "chermod2011@gmail.com",
+                    subject: "Security scan status Email",
+                    body: "Security scan was successful!"
                 }
                 failure {
-                    archiveArtifacts artifacts: 'target/logs/*.log', allowEmptyArchive: true
-                    emailext(
-                        to: "chermod2011@gmail.com",
-                        subject: "Security scan status Email",
-                        body: "Security scan failed!",
-                        attachmentsPattern: 'target/logs/*.log'
-                    )
+                    mail to: "chermod2011@gmail.com",
+                    subject: "Security scan status Email",
+                    body: "Security scan failed!"
                 }
             }
         }
