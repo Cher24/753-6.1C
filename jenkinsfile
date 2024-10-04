@@ -1,81 +1,55 @@
 pipeline {
     agent any
-
+    environment {
+        DIRECTORY_PATH = '/path/to/code/directory' // Update this path if necessary
+        TESTING_ENVIRONMENT = 'Testing'
+        PRODUCTION_ENVIRONMENT = 'Cher'
+    }
     stages {
-        stage("Build") {
+        stage('Build') {
             steps {
-                echo "Building was successful"
-                echo "Tool : Maven"
+                echo 'Building was successful.'
+		echo 'Tool : Maven'
             }
         }
         stage('Unit and Integration Tests') {
             steps {
-                echo "Unit and Integration Test passed"
-                echo "Tool : Junit"
-            }
-            post {
-                success {
-                    emailext(
-                        to: "chermod2011@gmail.com",
-                        subject: "Build Status Email: SUCCESS",
-                        body: "Build was successful!",
-                        attachLog: true
-                    )
-                }
-                failure {
-                    emailext(
-                        to: "chermod2011@gmail.com",
-                        subject: "Build Status Email: FAILURE",
-                        body: "Build failed!",
-                        attachLog: true
-                    )
-                }
+                echo 'Unit and Integration Test passed'
+                echo 'Tool : Junit'
             }
         }
         stage('Code Analysis') {
             steps {
-                echo "Code Analysis : Completed"
-                echo "Tool : Jmeter"
+                echo 'Code Analysis : Completed'
+                echo 'Tool : Jmeter'
             }
         }
         stage('Security Scan') {
             steps {
-                echo "Security Scan completed"
-                echo "Tool : Jmester"
-            }
-            post {
-                success {
-                    emailext(
-                        to: "chermod2011@gmail.com",
-                        subject: "Security Scan Status: SUCCESS",
-                        body: "Security scan was successful!",
-                        attachLog: true
-                    )
-                }
-                failure {
-                    emailext(
-                        to: "chermod2011@gmail.com",
-                        subject: "Security Scan Status: FAILURE",
-                        body: "Security scan failed!",
-                        attachLog: true
-                    )
-                }
-            }
-        }
-        stage('Deploy to Staging') {
-            steps {
-                echo "Deployed to Staging"
+                echo 'Security Scan complete'
+                echo 'Tool : Jmester'
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                echo "Integration Tests on Staging passed"
-                echo "Tool : Jmeter"
+                echo 'Integration Tests on Staging passed'
+                echo 'Tool : Jmeter'
+                sleep 10
+            }
+            post {
+                success {
+                    emailext (
+                        to: 'chermod2011@gmail.com', 
+                        subject: 'Test Status Email',
+                        body: 'Test successful', 
+                        attachLog: true
+                    )
+                }
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo "Deployed to Production"
+                echo 'Deployed to Production'
             }
         }
     }
