@@ -1,54 +1,50 @@
 pipeline {
     agent any
     environment {
-        DIRECTORY_PATH = '/path/to/code/directory' // Update this path if necessary
+        DIRECTORY_PATH = "${WORKSPACE}" // Automatically points to the current job's workspace
         TESTING_ENVIRONMENT = 'Testing'
         PRODUCTION_ENVIRONMENT = 'Cher'
     }
     stages {
         stage('Build') {
             steps {
-                echo 'Building was successful.'
-		echo 'Tool : Maven'
+                echo 'Build the code using a build automation tool.'
             }
         }
         stage('Unit and Integration Tests') {
             steps {
-                echo 'Unit and Integration Test passed'
-                echo 'Tool : Junit'
+                echo 'Run unit tests to ensure the code functions as expected and run integration tests.'
             }
         }
         stage('Code Analysis') {
             steps {
-                echo 'Code Analysis : Completed'
-                echo 'Tool : Jmeter'
+                echo 'Integrate a code analysis tool to analyze the code and ensure it meets industry standards.'
             }
         }
         stage('Security Scan') {
             steps {
-                echo 'Security Scan complete'
-                echo 'Tool : Jmester'
+                echo 'Perform a security scan on the code using a tool to identify any vulnerabilities.'
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                echo 'Integration Tests on Staging passed'
-                echo 'Tool : Jmeter'
+                echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment.'
                 sleep 10
             }
             post {
                 success {
                     emailext (
-                        to: 'chermod2011@gmail.com', 
+                        to: 'chermod2011@gmail.com', // Updated email address
                         subject: 'Test Status Email',
                         body: 'Test successful', 
+                        attachLog: true
                     )
                 }
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo 'Deployed to Production'
+                echo 'Deploy the application to a production server.'
             }
         }
     }
