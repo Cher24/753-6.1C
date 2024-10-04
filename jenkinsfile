@@ -15,16 +15,22 @@ pipeline {
             }
             post {
                 success {
-                    mail to: "chermod2011@gmail.com",
+                    archiveArtifacts artifacts: 'target/logs/*.log', allowEmptyArchive: true
+                    emailext(
+                        to: "chermod2011@gmail.com",
                         subject: "Build Status Email",
                         body: "Build was successful!",
-                        attachLog: true
+                        attachmentsPattern: 'target/logs/*.log'
+                    )
                 }
                 failure {
-                    mail to: "chermod2011@gmail.com",
+                    archiveArtifacts artifacts: 'target/logs/*.log', allowEmptyArchive: true
+                    emailext(
+                        to: "chermod2011@gmail.com",
                         subject: "Build Status Email",
                         body: "Build failed!",
-                        attachLog: true
+                        attachmentsPattern: 'target/logs/*.log'
+                    )
                 }
             }
         }
@@ -37,20 +43,26 @@ pipeline {
         stage('Security Scan') {
             steps {
                 echo "Security Scan completed"
-                echo "Tool : Jmester"
+                echo "Tool : Jmeter"
             }
             post {
                 success {
-                    mail to: "chermod2011@gmail.com",
+                    archiveArtifacts artifacts: 'target/logs/*.log', allowEmptyArchive: true
+                    emailext(
+                        to: "chermod2011@gmail.com",
                         subject: "Security scan status Email",
                         body: "Security scan was successful!",
-                        attachLog: true
+                        attachmentsPattern: 'target/logs/*.log'
+                    )
                 }
                 failure {
-                    mail to: "chermod2011@gmail.com",
+                    archiveArtifacts artifacts: 'target/logs/*.log', allowEmptyArchive: true
+                    emailext(
+                        to: "chermod2011@gmail.com",
                         subject: "Security scan status Email",
                         body: "Security scan failed!",
-                        attachLog: true
+                        attachmentsPattern: 'target/logs/*.log'
+                    )
                 }
             }
         }
