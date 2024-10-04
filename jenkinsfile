@@ -15,15 +15,16 @@ pipeline {
             }
             post {
                 success {
-                    mail to: "chermod2011@gmail.com",
+                    emailext to: "chermod2011@gmail.com",
                     subject: "Build Status Email",
                     body: "Build was successful!",
                     attachLog: true
                 }
                 failure {
-                    mail to: "chermod2011@gmail.com",
+                    emailext to: "chermod2011@gmail.com",
                     subject: "Build Status Email",
-                    body: "Build failed!"
+                    body: "Build failed!",
+                    attachLog: true
                 }
             }
         }
@@ -40,15 +41,16 @@ pipeline {
             }
             post {
                 success {
-                    mail to: "chermod2011@gmail.com",
+                    emailext to: "chermod2011@gmail.com",
                     subject: "Security scan status Email",
                     body: "Security scan was successful!",
                     attachLog: true
                 }
                 failure {
-                    mail to: "chermod2011@gmail.com",
+                    emailext to: "chermod2011@gmail.com",
                     subject: "Security scan status Email",
-                    body: "Security scan failed!"
+                    body: "Security scan failed!",
+                    attachLog: true
                 }
             }
         }
