@@ -8,53 +8,44 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Build the code using a build 
-automation tool.'
+                echo 'Building the code using a build automation tool.'
             }
         }
         stage('Unit and Integration Tests') {
             steps {
-                echo 'Run unit tests to ensure the 
-code functions as expected and run integration tests'
+                echo 'Running unit tests to ensure the code functions as expected and running integration tests.'
             }
         }
         stage('Code Analysis') {
             steps {
-                echo 'Integrate a code analysis tool 
-to analyse the code and ensure it meets industry 
-standards.'
+                echo 'Integrating a code analysis tool to analyze the code and ensure it meets industry standards.'
             }
         }
         stage('Security Scan') {
             steps {
-                echo 'Perform a security scan on the 
-code using a tool to identify any vulnerabilities.'
+                echo 'Performing a security scan on the code using a tool to identify any vulnerabilities.'
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                echo 'Run integration tests on the 
-staging environment to ensure the application 
-functions as expected in a production-like 
-environment'
+                echo 'Running integration tests on the staging environment to ensure the application functions as expected in a production-like environment.'
                 sleep 10
             }
             post {
                 success {
                     emailext (
-                    to: 'chokforze@gmail.com',
-                    subject: 'Test Status Email',
-                    body: 'Test successful', 
-                    attachLog: true
+                        to: 'chokforze@gmail.com',
+                        subject: 'Test Status Email',
+                        body: 'Test successful',
+                        attachLog: true
                     )
                 }
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo 'deploy the application to a 
-production server'
+                echo 'Deploying the application to a production server.'
             }
         }
     }
- }
+}
