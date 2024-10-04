@@ -34,10 +34,12 @@ pipeline {
             post {
                 success {
                     emailext (
-                        to: 'chermod2011@gmail.com',
                         subject: 'Test Status Email',
                         body: 'Test successful',
-                        attachLog: true
+                        to: 'chermod2011@gmail.com',
+                        from: 'Jenkins@example.com',
+                        replyTo: 'chermod2011@gmail.com',
+                        attachmentsPattern: 'a.txt'
                     )
                 }
             }
