@@ -1,9 +1,6 @@
 pipeline {
     agent any
     environment {
-        DIRECTORY_PATH = "${WORKSPACE}" // Automatically points to the current job's workspace
-        TESTING_ENVIRONMENT = 'Testing'
-        PRODUCTION_ENVIRONMENT = 'Cher'
     }
     stages {
         stage('Build') {
