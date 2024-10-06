@@ -8,10 +8,10 @@ pipeline {
             }
         }
         stage('Unit and Integration Tests') {
-            steps {  // Corrected from 'step' to 'steps'
+            steps {
                 echo "Unit and Integration Test passed"
                 echo "Tool : Junit"
-            sleep 10
+                sleep 10
             }
             post {
                 success {  // Corrected from 'succuss' to 'success'
@@ -35,14 +35,14 @@ pipeline {
         stage('Security Scan') {
             steps {
                 echo "Security Scan completed"
-                echo "Tool : Jmester"
+                echo "Tool : Jmeter"
             }
             post {
-                success {  // Corrected from 'succuss' to 'success'
+                success {
                     mail to: "chermod2011@gmail.com",
                     subject: "Security scan status Email",
                     body: "Security scan was successful!"
-                }0
+                }
                 failure {
                     mail to: "chermod2011@gmail.com",
                     subject: "Security scan status Email",
