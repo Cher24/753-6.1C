@@ -1,75 +1,111 @@
 pipeline {
     agent any
+    environment {
+        LOG_FILE = 'stage_logs.txt'  // Define a log file to store logs
+    }
     stages {
         stage("Build") {
             steps {
-                echo "Building was successful"
-                echo "Tool : Maven"
+                script {
+                    def buildLog = sh(script: "echo 'Building was successful\nTool: Maven' | tee -a ${env.LOG_FILE}", returnStdout: true)
+                    echo buildLog
+                }
             }
         }
         stage('Unit and Integration Tests') {
             steps {
-                echo "Unit and Integration Test passed"
-                echo "Tool : Junit"
+                script {
+                    def testLog = sh(script: "echo 'Unit and Integration Test passed\nTool: Junit' | tee -a ${env.LOG_FILE}", returnStdout: true)
+                    echo testLog
+                }
                 sleep 10
             }
             post {
                 success {
-                    mail to: "chermod2011@gmail.com",
-                    subject: "Build Status Email",
-                    body: "Build was successful!"
+                    emailext(
+                        to: "chermod2011@gmail.com",
+                        subject: "Build Status: SUCCESS",
+                        body: "The stage 'Unit and Integration Tests' completed successfully.",
+                        attachLog: true,
+                        attachmentsPattern: "${env.LOG_FILE}"
+                    )
                 }
                 failure {
-                    mail to: "chermod2011@gmail.com",
-                    subject: "Build Status Email",
-                    body: "Build failed!"
+                    emailext(
+                        to: "chermod2011@gmail.com",
+                        subject: "Build Status: FAILURE",
+                        body: "The stage 'Unit and Integration Tests' failed.",
+                        attachLog: true,
+                        attachmentsPattern: "${env.LOG_FILE}"
+                    )
                 }
             }
         }
         stage('Code Analysis') {
             steps {
-                echo "Code Analysis : Completed"
-                echo "Tool : Jmeter"
+                script {
+                    def analysisLog = sh(script: "echo 'Code Analysis: Completed\nTool: Jmeter' | tee -a ${env.LOG_FILE}", returnStdout: true)
+                    echo analysisLog
+                }
             }
         }
         stage('Security Scan') {
             steps {
-                echo "Security Scan completed"
-                echo "Tool : Jmeter"
+                script {
+                    def securityLog = sh(script: "echo 'Security Scan completed\nTool: Jmeter' | tee -a ${env.LOG_FILE}", returnStdout: true)
+                    echo securityLog
+                }
             }
             post {
                 success {
-                    mail to: "chermod2011@gmail.com",
-                    subject: "Security scan status Email",
-                    body: "Security scan was successful!"
+                    emailext(
+                        to: "chermod2011@gmail.com",
+                        subject: "Security Scan Status: SUCCESS",
+                        body: "The Security Scan stage was successful.",
+                        attachLog: true,
+                        attachmentsPattern: "${env.LOG_FILE}"
+                    )
                 }
                 failure {
-                    mail to: "chermod2011@gmail.com",
-                    subject: "Security scan status Email",
-                    body: "Security scan failed!"
+                    emailext(
+                        to: "chermod2011@gmail.com",
+                        subject: "Security Scan Status: FAILURE",
+                        body: "The Security Scan stage failed.",
+                        attachLog: true,
+                        attachmentsPattern: "${env.LOG_FILE}"
+                    )
                 }
             }
         }
         stage('Deploy to Staging') {
             steps {
-                echo "Deployed to Staging"
+                script {
+                    def deployLog = sh(script: "echo 'Deployed to Staging' | tee -a ${env.LOG_FILE}", returnStdout: true)
+                    echo deployLog
+                }
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                echo "Integration Tests on Staging passed"
-                echo "Tool : Jmeter"
+                script {
+                    def integrationLog = sh(script: "echo 'Integration Tests on Staging passed\nTool: Jmeter' | tee -a ${env.LOG_FILE}", returnStdout: true)
+                    echo integrationLog
+                }
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo "Deployed to Production"
+                script {
+                    def prodLog = sh(script: "echo 'Deployed to Production' | tee -a ${env.LOG_FILE}", returnStdout: true)
+                    echo prodLog
+                }
             }
         }
     }
     post {
         always {
             echo "Cleaning up resources."
+            archiveArtifacts artifacts: "${env.LOG_FILE}", allowEmptyArchive: true
         }
     }
 }
