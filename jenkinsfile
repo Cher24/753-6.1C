@@ -3,106 +3,80 @@ pipeline {
     stages {
         stage("Build") {
             steps {
-                script {
-                    echo "Building was successful"
-                    echo "Tool: Maven"
-                    // Assuming some build command here
-                }
-            }
-            post {
-                success {
-                    notifyStatus("Build", "SUCCESS")
-                }
-                failure {
-                    notifyStatus("Build", "FAILURE")
-                }
+                echo "Building was successful"
+                echo "Tool : Maven"
             }
         }
         stage('Unit and Integration Tests') {
             steps {
-                script {
-                    echo "Unit and Integration Test passed"
-                    echo "Tool: Junit"
-                    sleep 10 // Simulate test duration
-                }
+                echo "Unit and Integration Test passed"
+                echo "Tool : Junit"
+                sleep 10
             }
             post {
                 success {
-                    notifyStatus("Unit and Integration Tests", "SUCCESS")
+                    emailext (
+                        to: 'chermod2011@gmail.com',
+                        subject: 'Unit and Integration Tests Status: SUCCESS',
+                        body: 'Unit and Integration tests were successful.',
+                        attachLog: true  // Attach the build log
+                    )
                 }
                 failure {
-                    notifyStatus("Unit and Integration Tests", "FAILURE")
+                    emailext (
+                        to: 'chermod2011@gmail.com',
+                        subject: 'Unit and Integration Tests Status: FAILURE',
+                        body: 'Unit and Integration tests failed.',
+                        attachLog: true  // Attach the build log
+                    )
                 }
             }
         }
         stage('Code Analysis') {
             steps {
-                script {
-                    echo "Code Analysis: Completed"
-                    echo "Tool: Jmeter"
-                }
-            }
-            post {
-                success {
-                    notifyStatus("Code Analysis", "SUCCESS")
-                }
-                failure {
-                    notifyStatus("Code Analysis", "FAILURE")
-                }
+                echo "Code Analysis: Completed"
+                echo "Tool: Jmeter"
             }
         }
         stage('Security Scan') {
             steps {
-                script {
-                    echo "Security Scan completed"
-                    echo "Tool: Jmeter"
-                }
+                echo "Security Scan completed"
+                echo "Tool: Jmeter"
             }
             post {
                 success {
-                    notifyStatus("Security Scan", "SUCCESS")
+                    emailext (
+                        to: 'chermod2011@gmail.com',
+                        subject: 'Security Scan Status: SUCCESS',
+                        body: 'Security scan was successful.',
+                        attachLog: true  // Attach the build log
+                    )
                 }
                 failure {
-                    notifyStatus("Security Scan", "FAILURE")
+                    emailext (
+                        to: 'chermod2011@gmail.com',
+                        subject: 'Security Scan Status: FAILURE',
+                        body: 'Security scan failed.',
+                        attachLog: true  // Attach the build log
+                    )
                 }
             }
         }
         stage('Deploy to Staging') {
             steps {
-                script {
-                    echo "Deployed to Staging"
-                }
+                echo "Deployed to Staging"
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                script {
-                    echo "Integration Tests on Staging passed"
-                    echo "Tool: Jmeter"
-                }
+                echo "Integration Tests on Staging passed"
+                echo "Tool: Jmeter"
             }
         }
         stage('Deploy to Production') {
             steps {
-                script {
-                    echo "Deployed to Production"
-                }
+                echo "Deployed to Production"
             }
         }
     }
-    post {
-        always {
-            archiveArtifacts artifacts: '**/logs/**/*', allowEmptyArchive: true // Adjust the path to your log files
-        }
-    }
-}
-
-def notifyStatus(String stageName, String status) {
-    def logFile = "logs/${stageName.replaceAll(" ", "_").toLowerCase()}_log.txt" // Log file name
-    writeFile file: logFile, text: "Stage: ${stageName}\nStatus: ${status}\nLogs attached."
-    
-    mail to: "chermod2011@gmail.com",
-         subject: "${stageName} - ${status}",
-         body: "The stage '${stageName}' has finished with status: ${status}.\nLogs are attached.",
-         attachLog: true
 }
