@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        LOG_FILE = 'stage_logs.txt'  // Define a log file to store logs
+        LOG_FILE = 'stage_logs.txt'  // Log file to store all stage outputs
     }
     stages {
         stage("Build") {
@@ -15,10 +15,10 @@ pipeline {
         stage('Unit and Integration Tests') {
             steps {
                 script {
-                    def testLog = sh(script: "echo 'Unit and Integration Test passed\nTool: Junit' | tee -a ${env.LOG_FILE}", returnStdout: true)
+                    def testLog = sh(script: "echo 'Unit and Integration Tests passed\nTool: JUnit' | tee -a ${env.LOG_FILE}", returnStdout: true)
                     echo testLog
                 }
-                sleep 10
+                sleep 10  // Simulating test duration
             }
             post {
                 success {
@@ -44,7 +44,7 @@ pipeline {
         stage('Code Analysis') {
             steps {
                 script {
-                    def analysisLog = sh(script: "echo 'Code Analysis: Completed\nTool: Jmeter' | tee -a ${env.LOG_FILE}", returnStdout: true)
+                    def analysisLog = sh(script: "echo 'Code Analysis completed\nTool: SonarQube' | tee -a ${env.LOG_FILE}", returnStdout: true)
                     echo analysisLog
                 }
             }
@@ -52,7 +52,7 @@ pipeline {
         stage('Security Scan') {
             steps {
                 script {
-                    def securityLog = sh(script: "echo 'Security Scan completed\nTool: Jmeter' | tee -a ${env.LOG_FILE}", returnStdout: true)
+                    def securityLog = sh(script: "echo 'Security Scan completed\nTool: OWASP ZAP' | tee -a ${env.LOG_FILE}", returnStdout: true)
                     echo securityLog
                 }
             }
@@ -61,7 +61,7 @@ pipeline {
                     emailext(
                         to: "chermod2011@gmail.com",
                         subject: "Security Scan Status: SUCCESS",
-                        body: "The Security Scan stage was successful.",
+                        body: "The 'Security Scan' stage was successful.",
                         attachLog: true,
                         attachmentsPattern: "${env.LOG_FILE}"
                     )
@@ -70,7 +70,7 @@ pipeline {
                     emailext(
                         to: "chermod2011@gmail.com",
                         subject: "Security Scan Status: FAILURE",
-                        body: "The Security Scan stage failed.",
+                        body: "The 'Security Scan' stage failed.",
                         attachLog: true,
                         attachmentsPattern: "${env.LOG_FILE}"
                     )
@@ -88,7 +88,7 @@ pipeline {
         stage('Integration Tests on Staging') {
             steps {
                 script {
-                    def integrationLog = sh(script: "echo 'Integration Tests on Staging passed\nTool: Jmeter' | tee -a ${env.LOG_FILE}", returnStdout: true)
+                    def integrationLog = sh(script: "echo 'Integration Tests on Staging passed\nTool: JMeter' | tee -a ${env.LOG_FILE}", returnStdout: true)
                     echo integrationLog
                 }
             }
