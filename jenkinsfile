@@ -1,111 +1,108 @@
 pipeline {
     agent any
-    environment {
-        LOG_FILE = 'stage_logs.txt'  // Log file to store all stage outputs
-    }
     stages {
         stage("Build") {
             steps {
                 script {
-                    def buildLog = sh(script: "echo 'Building was successful\nTool: Maven' | tee -a ${env.LOG_FILE}", returnStdout: true)
-                    echo buildLog
+                    echo "Building was successful"
+                    echo "Tool: Maven"
+                    // Assuming some build command here
+                }
+            }
+            post {
+                success {
+                    notifyStatus("Build", "SUCCESS")
+                }
+                failure {
+                    notifyStatus("Build", "FAILURE")
                 }
             }
         }
         stage('Unit and Integration Tests') {
             steps {
                 script {
-                    def testLog = sh(script: "echo 'Unit and Integration Tests passed\nTool: JUnit' | tee -a ${env.LOG_FILE}", returnStdout: true)
-                    echo testLog
+                    echo "Unit and Integration Test passed"
+                    echo "Tool: Junit"
+                    sleep 10 // Simulate test duration
                 }
-                sleep 10  // Simulating test duration
             }
             post {
                 success {
-                    emailext(
-                        to: "chermod2011@gmail.com",
-                        subject: "Build Status: SUCCESS",
-                        body: "The stage 'Unit and Integration Tests' completed successfully.",
-                        attachLog: true,
-                        attachmentsPattern: "${env.LOG_FILE}"
-                    )
+                    notifyStatus("Unit and Integration Tests", "SUCCESS")
                 }
                 failure {
-                    emailext(
-                        to: "chermod2011@gmail.com",
-                        subject: "Build Status: FAILURE",
-                        body: "The stage 'Unit and Integration Tests' failed.",
-                        attachLog: true,
-                        attachmentsPattern: "${env.LOG_FILE}"
-                    )
+                    notifyStatus("Unit and Integration Tests", "FAILURE")
                 }
             }
         }
         stage('Code Analysis') {
             steps {
                 script {
-                    def analysisLog = sh(script: "echo 'Code Analysis completed\nTool: SonarQube' | tee -a ${env.LOG_FILE}", returnStdout: true)
-                    echo analysisLog
+                    echo "Code Analysis: Completed"
+                    echo "Tool: Jmeter"
+                }
+            }
+            post {
+                success {
+                    notifyStatus("Code Analysis", "SUCCESS")
+                }
+                failure {
+                    notifyStatus("Code Analysis", "FAILURE")
                 }
             }
         }
         stage('Security Scan') {
             steps {
                 script {
-                    def securityLog = sh(script: "echo 'Security Scan completed\nTool: OWASP ZAP' | tee -a ${env.LOG_FILE}", returnStdout: true)
-                    echo securityLog
+                    echo "Security Scan completed"
+                    echo "Tool: Jmeter"
                 }
             }
             post {
                 success {
-                    emailext(
-                        to: "chermod2011@gmail.com",
-                        subject: "Security Scan Status: SUCCESS",
-                        body: "The 'Security Scan' stage was successful.",
-                        attachLog: true,
-                        attachmentsPattern: "${env.LOG_FILE}"
-                    )
+                    notifyStatus("Security Scan", "SUCCESS")
                 }
                 failure {
-                    emailext(
-                        to: "chermod2011@gmail.com",
-                        subject: "Security Scan Status: FAILURE",
-                        body: "The 'Security Scan' stage failed.",
-                        attachLog: true,
-                        attachmentsPattern: "${env.LOG_FILE}"
-                    )
+                    notifyStatus("Security Scan", "FAILURE")
                 }
             }
         }
         stage('Deploy to Staging') {
             steps {
                 script {
-                    def deployLog = sh(script: "echo 'Deployed to Staging' | tee -a ${env.LOG_FILE}", returnStdout: true)
-                    echo deployLog
+                    echo "Deployed to Staging"
                 }
             }
         }
         stage('Integration Tests on Staging') {
             steps {
                 script {
-                    def integrationLog = sh(script: "echo 'Integration Tests on Staging passed\nTool: JMeter' | tee -a ${env.LOG_FILE}", returnStdout: true)
-                    echo integrationLog
+                    echo "Integration Tests on Staging passed"
+                    echo "Tool: Jmeter"
                 }
             }
         }
         stage('Deploy to Production') {
             steps {
                 script {
-                    def prodLog = sh(script: "echo 'Deployed to Production' | tee -a ${env.LOG_FILE}", returnStdout: true)
-                    echo prodLog
+                    echo "Deployed to Production"
                 }
             }
         }
     }
     post {
         always {
-            echo "Cleaning up resources."
-            archiveArtifacts artifacts: "${env.LOG_FILE}", allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/logs/**/*', allowEmptyArchive: true // Adjust the path to your log files
         }
     }
+}
+
+def notifyStatus(String stageName, String status) {
+    def logFile = "logs/${stageName.replaceAll(" ", "_").toLowerCase()}_log.txt" // Log file name
+    writeFile file: logFile, text: "Stage: ${stageName}\nStatus: ${status}\nLogs attached."
+    
+    mail to: "chermod2011@gmail.com",
+         subject: "${stageName} - ${status}",
+         body: "The stage '${stageName}' has finished with status: ${status}.\nLogs are attached.",
+         attachLog: true
 }
