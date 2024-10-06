@@ -4,79 +4,26 @@ pipeline {
         stage("Build") {
             steps {
                 echo "Building was successful"
-                echo "Tool : Maven"
             }
         }
-        stage('Unit and Integration Tests') {
-            steps {
-                echo "Unit and Integration Test passed"
-                echo "Tool : Junit"
-                sleep 10
-            }
-            post {
-                success {
-                    emailext (
-                        to: 'chermod2011@gmail.com',
-                        subject: 'Unit and Integration Tests Status: SUCCESS',
-                        body: 'Unit and Integration tests were successful.',
-                        attachLog: true  // Attach the build log
-                    )
-                }
-                failure {
-                    emailext (
-                        to: 'chermod2011@gmail.com',
-                        subject: 'Unit and Integration Tests Status: FAILURE',
-                        body: 'Unit and Integration tests failed.',
-                        attachLog: true  // Attach the build log
-                    )
-                }
-            }
+        // Additional stages here...
+    }
+    post {
+        success {
+            emailext (
+                to: 'chermod2011@gmail.com',
+                subject: 'Build Successful',
+                body: 'The build was successful!',
+                attachLog: true // Attach logs to the email
+            )
         }
-        stage('Code Analysis') {
-            steps {
-                echo "Code Analysis: Completed"
-                echo "Tool: Jmeter"
-            }
-        }
-        stage('Security Scan') {
-            steps {
-                echo "Security Scan completed"
-                echo "Tool: Jmeter"
-            }
-            post {
-                success {
-                    emailext (
-                        to: 'chermod2011@gmail.com',
-                        subject: 'Security Scan Status: SUCCESS',
-                        body: 'Security scan was successful.',
-                        attachLog: true  // Attach the build log
-                    )
-                }
-                failure {
-                    emailext (
-                        to: 'chermod2011@gmail.com',
-                        subject: 'Security Scan Status: FAILURE',
-                        body: 'Security scan failed.',
-                        attachLog: true  // Attach the build log
-                    )
-                }
-            }
-        }
-        stage('Deploy to Staging') {
-            steps {
-                echo "Deployed to Staging"
-            }
-        }
-        stage('Integration Tests on Staging') {
-            steps {
-                echo "Integration Tests on Staging passed"
-                echo "Tool: Jmeter"
-            }
-        }
-        stage('Deploy to Production') {
-            steps {
-                echo "Deployed to Production"
-            }
+        failure {
+            emailext (
+                to: 'chermod2011@gmail.com',
+                subject: 'Build Failed',
+                body: 'The build has failed!',
+                attachLog: true // Attach logs to the email
+            )
         }
     }
 }
