@@ -14,7 +14,7 @@ pipeline {
                 sleep 10
             }
             post {
-                success {  // Corrected from 'succuss' to 'success'
+                success {
                     mail to: "chermod2011@gmail.com",
                     subject: "Build Status Email",
                     body: "Build was successful!"
@@ -65,6 +65,11 @@ pipeline {
             steps {
                 echo "Deployed to Production"
             }
+        }
+    }
+    post {
+        always {
+            echo "Cleaning up resources."
         }
     }
 }
